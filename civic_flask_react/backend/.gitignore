@@ -1,0 +1,10 @@
+*venv/
+*.env
+*.csv
+*.pdf
+*.jpg
+<<<<<<< HEAD
+*.pyc
+__pycache__/
+=======
+>>>>>>> c9d3be6 (Correctly grabbing results now)
