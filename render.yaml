@@ -1,0 +1,37 @@
+services:
+  # Frontend Service
+  - type: web
+    name: bi-frontend-app
+    env: docker
+    dockerfilePath: bi-frontend/Dockerfile
+    buildCommand: |
+      docker build \
+        --build-arg REACT_APP_FLASK_URL=https://bi-backend-app.onrender.com \
+        -t bi-frontend ./bi-frontend
+    envVars:
+      - key: REACT_APP_FLASK_URL
+        fromService:
+          name: bi-backend-app
+          type: web
+          property: host
+
+  # Backend Service
+  - type: web
+    name: bi-backend-app
+    env: docker
+    dockerfilePath: ./backend/Dockerfile
+    buildCommand: docker build -t bi-backend ./backend
+    envVars:
+      - key: FRONTEND_ORIGIN
+        fromService:
+          name: bi-frontend-app
+          type: web
+          property: host
+      - key: SECRET_KEY
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: FLASK_DEBUG
+        value: "0"
+      - key: PYTHONPATH
+        value: "/app"
